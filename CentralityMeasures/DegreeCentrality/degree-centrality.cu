@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
     cudaMemcpy(d_matrix, h_matrix, byte_matrix, cudaMemcpyHostToDevice);
     cudaMemcpy(d_degree_centrality, h_degree_centrality, byte_vector, cudaMemcpyHostToDevice);
 
-    dim3 blockDim(32, 32);
+    dim3 blockDim(32, 1);
     dim3 gridDim(
         (cols + blockDim.x - 1) / blockDim.x,
         (rows + blockDim.y - 1) / blockDim.y
