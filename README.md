@@ -1,1 +1,2 @@
 # NetworkAnalysis-with-GPU
+Questa repository è dedicata al mio progetto di tesi magistrale, il cui obiettivo è quello di implementare, utilizzando il parallelismo offerto dalle GPU, algoritmi che consentano di calcolare la centralità e la connettività di una rete.
