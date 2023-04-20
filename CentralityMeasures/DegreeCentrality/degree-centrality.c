@@ -1,26 +1,25 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-
-int readMatrix(int rows, int cols, int *matrix, const char *filename);
+#include"../../lib/utils.h"
 
 int main(int argc, char const *argv[]) {
 
     int node, rows, cols;
     int *matrix;
-    int *degree_centrality_vector;
+    double *degree_centrality_vector;
 
     printf("Inserire numero di nodi: ");
     scanf("%d", &node);
     rows = node;
     cols = node;
 
-    // Allochiamo le strutture dati necessarie
+    /* Allochiamo le strutture dati necessarie */
     matrix = (int*)malloc(rows * cols * sizeof(int));
-    degree_centrality_vector = (int*)malloc(node * sizeof(int));
+    degree_centrality_vector = (double*)malloc(node * sizeof(double));
 
     // Leggiamo la matrice di esempio da un file
-    readMatrix(rows, cols, matrix, "matrix.dat");
+    readMatrix(rows, cols, matrix, "data/matrix.dat");
 
     // Stampiamo la matrice di esempio
     for (int i = 0; i < rows; i++) {
@@ -39,26 +38,10 @@ int main(int argc, char const *argv[]) {
         for (int j = 0; j < neighbors; j++) {
             degree_centrality_vector[i] += matrix[i * cols + j];
         }
+        degree_centrality_vector[i] /= (double)(node-1);
 
-        printf("Node: %d\tScore: %d\n", i+1, degree_centrality_vector[i]);
+        printf("Node: %d\tScore: %f\n", i+1, degree_centrality_vector[i]);
     }
     
     return 0;
-}
-
-int readMatrix(int rows, int cols, int *matrix, const char *filename) {
-    
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        return 0;
-    }
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            fscanf(file, "%d", &matrix[i * cols + j]);
-        }
-    }
-
-    fclose(file);
-    return 1;
 }

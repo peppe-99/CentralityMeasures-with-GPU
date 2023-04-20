@@ -2,12 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-
-/* Funzione per leggere una matrice da un file */
-int readMatrix(int rows, int cols, int *matrix, const char *filename);
-
-/* Funzione per lo swap di matrici */
-void swap(int **current_matrix, int **new_matrix);
+#include"../../lib/utils.h"
 
 int main(int argc, char const *argv[]) {
 
@@ -29,7 +24,7 @@ int main(int argc, char const *argv[]) {
     closeness_centrality = (double*)malloc(node * sizeof(double));
 
     /* Leggiamo la matrice di esempio da un file */
-    readMatrix(rows, cols, matrix, "matrix.dat");
+    readMatrix(rows, cols, matrix, "data/matrix.dat");
 
     /* Stampiamo la matrice di esempio */
     for (int i = 0; i < rows; i++) {
@@ -56,7 +51,7 @@ int main(int argc, char const *argv[]) {
                 for (int k = 0; k < cols; k++) {
                     pwd_matrix[i * cols + j] += tmp_matrix[i * cols + k] * matrix[k * cols + j];
                 }
-                if(i != j && pwd_matrix[i * cols + j] != 0 && distance_matrix[i * cols + j] == 0) {
+                if (i != j && pwd_matrix[i * cols + j] != 0 && distance_matrix[i * cols + j] == 0) {
                     distance_matrix[i * cols + j] = pwd;
                     rimanenti--;
                 }
@@ -81,32 +76,9 @@ int main(int argc, char const *argv[]) {
         for (int j = 0; j < cols; j++) {
             sum_dist += distance_matrix[i * cols + j];
         }
-        closeness_centrality[i] = (double) 1 / sum_dist;
+        closeness_centrality[i] = (double) (node - 1) / sum_dist;
         printf("Node: %d\tScore: %f\n", (i+1), closeness_centrality[i]);
     }  
     
     return 0;
-}
-
-int readMatrix(int rows, int cols, int *matrix, const char *filename) {
-    
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
-        return 0;
-    }
-
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            fscanf(file, "%d", &matrix[i * cols + j]);
-        }
-    }
-
-    fclose(file);
-    return 1;
-}
-
-void swap(int **current_matrix, int **new_matrix) {
-    int *temp = *current_matrix;
-    *current_matrix = *new_matrix;
-    *new_matrix = temp;
 }
