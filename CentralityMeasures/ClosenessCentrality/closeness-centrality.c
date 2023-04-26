@@ -1,5 +1,4 @@
 #include<stdio.h>
-#include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include"../../lib/utils.h"
@@ -27,12 +26,7 @@ int main(int argc, char const *argv[]) {
     readMatrix(rows, cols, matrix, "data/matrix.dat");
 
     /* Stampiamo la matrice di esempio */
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%d\t", matrix[i * cols + j]);
-        }
-        printf("\n");
-    }
+    printMatrix(rows, cols, matrix);
 
     /* Calcoliamo la distance matrix */
     rimanenti = (node * node) - node; // numero di celle della distance matrix da valorizzare
@@ -62,12 +56,7 @@ int main(int argc, char const *argv[]) {
 
     /* Stampiamo la distance matrix */
     printf("\nDistance Matrix:\n");
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%d\t", distance_matrix[i * cols + j]);
-        }
-        printf("\n");
-    }
+    printMatrix(rows, cols, distance_matrix);
 
     /* Calcoliamo la Closeness Centrality */
     printf("\nCloseness Centrality:\n");
