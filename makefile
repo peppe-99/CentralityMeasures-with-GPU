@@ -7,8 +7,9 @@ degree-centrality-sequential: degree-centrality.o utils.o
 	gcc degree-centrality.o utils.o -o degree-centrality-sequential.out
 	./degree-centrality-sequential.out
 
-degree-centrality-GPU: degree-centrality-GPU.o utils.o
-	nvcc degree-centrality-GPU.o utils.o -o degree-centrality-GPU
+degree-centrality-GPU: degree-centrality-GPU.o utils-GPU.o
+	nvcc degree-centrality-GPU.o utils.o -o degree-centrality-GPU.out
+	./degree-centrality-GPU.out
 
 closeness-centrality.o:
 	gcc -c ./CentralityMeasures/ClosenessCentrality/closeness-centrality.c
@@ -22,6 +23,8 @@ degree-centrality-GPU.o:
 utils.o:
 	gcc -c ./lib/utils.c
 
+utils-GPU.o:
+	nvcc -c ./lib/utils.cu
+
 clean:
 	rm -rf *.o *.out
-	clear
