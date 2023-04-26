@@ -23,10 +23,10 @@ int main(int argc, char const *argv[]) {
     closeness_centrality = (double*)malloc(node * sizeof(double));
 
     /* Leggiamo la matrice di esempio da un file */
-    readMatrix(rows, cols, matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, matrix, "data/matrix.dat");
 
     /* Stampiamo la matrice di esempio */
-    printMatrix(rows, cols, matrix);
+    printIMatrix(rows, cols, matrix);
 
     /* Calcoliamo la distance matrix */
     rimanenti = (node * node) - node; // numero di celle della distance matrix da valorizzare
@@ -56,7 +56,7 @@ int main(int argc, char const *argv[]) {
 
     /* Stampiamo la distance matrix */
     printf("\nDistance Matrix:\n");
-    printMatrix(rows, cols, distance_matrix);
+    printIMatrix(rows, cols, distance_matrix);
 
     /* Calcoliamo la Closeness Centrality */
     printf("\nCloseness Centrality:\n");

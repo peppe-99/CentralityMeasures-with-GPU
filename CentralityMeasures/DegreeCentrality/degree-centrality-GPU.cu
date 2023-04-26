@@ -28,10 +28,10 @@ int main(int argc, char const *argv[]) {
     h_degree_centrality = (double*)malloc(byte_vector);
 
     /* Lettura della matrice da file */
-    readMatrix(rows, cols, h_matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, h_matrix, "data/matrix.dat");
 
     /* Stampa della matrice */
-    printMatrix(rows, cols, h_matrix);
+    printIMatrix(rows, cols, h_matrix);
 
     /* Allocazione strutture dati device*/
     cudaMalloc((void **) &d_matrix, int_byte_matrix);
