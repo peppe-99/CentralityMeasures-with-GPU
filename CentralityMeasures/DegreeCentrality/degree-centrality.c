@@ -18,18 +18,13 @@ int main(int argc, char const *argv[]) {
     matrix = (int*)malloc(rows * cols * sizeof(int));
     degree_centrality_vector = (double*)malloc(node * sizeof(double));
 
-    // Leggiamo la matrice di esempio da un file
+    /* Leggiamo la matrice di esempio da un file */
     readMatrix(rows, cols, matrix, "data/matrix.dat");
 
-    // Stampiamo la matrice di esempio
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%d\t", matrix[i * cols + j]);
-        }
-        printf("\n");
-    }
+    /* Stampiamo la matrice di esempio */
+    printMatrix(rows, cols, matrix);
 
-    // Calcoliamo la degree_centrality di ogni nodo
+    /* Calcoliamo la degree cebntrality di ogni nodo */
     printf("\nDeegre Centrality\n");
     for (int i  = 0; i < node; i++) {
         int neighbors = cols;
@@ -43,5 +38,9 @@ int main(int argc, char const *argv[]) {
         printf("Node: %d\tScore: %f\n", i+1, degree_centrality_vector[i]);
     }
     
+    /* free della memoria */
+    free(matrix);
+    free(degree_centrality_vector);
+
     return 0;
 }
