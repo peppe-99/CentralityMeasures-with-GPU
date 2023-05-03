@@ -114,6 +114,19 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < node; i++) {
         printf("Node: %d\tScore: %f\n", (i+1), h_closeness_centralities[i]);
     }
+
+    /* Distruggo l'handle */
+    cublasDestroy(handle);
+
+    /* free della memoria */
+    free(h_matrix);
+    free(h_pwd_matrix);
+    free(h_distance_matrix);
+    free(h_closeness_centralities);
+    cudaFree(d_matrix);
+    cudaFree(d_pwd_matrix);
+    cudaFree(d_distance_matrix);
+    cudaFree(d_closeness_centralities);
    
     return 0;
 }
