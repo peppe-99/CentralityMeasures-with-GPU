@@ -6,7 +6,7 @@
 int main(int argc, char const *argv[]) {
 
     int node, rows, cols, rimanenti;
-    int *matrix, *pwd_matrix, *tmp_matrix, *distance_matrix;
+    int *matrix, *distance_matrix;
     double *closeness_centrality;
 
     /* Input: numero di nodi del grafo */
@@ -17,8 +17,6 @@ int main(int argc, char const *argv[]) {
 
     /* Allochiamo le strutture dati necessarie */
     matrix = (int*)malloc(rows * cols * sizeof(int));
-    tmp_matrix = (int*)malloc(rows * cols * sizeof(int));
-    pwd_matrix = (int*)malloc(rows * cols * sizeof(int));
     distance_matrix = (int*)malloc(rows * cols * sizeof(int));
     closeness_centrality = (double*)malloc(node * sizeof(double));
 
@@ -29,30 +27,7 @@ int main(int argc, char const *argv[]) {
     printIMatrix(rows, cols, matrix);
 
     /* Calcoliamo la distance matrix */
-    rimanenti = (node * node) - node; // numero di celle della distance matrix da valorizzare
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            distance_matrix[i * cols + j] = matrix[i * cols + j];
-            tmp_matrix[i * cols + j] = matrix[i * cols + j];
-            if (matrix[i * cols + j] != 0) rimanenti--;
-        }
-    }
-    /* Calcoliamo le potenze della matrice di adiacenza finché non abbiamo ottenuto la distance matrix */
-    for (int pwd = 2; rimanenti != 0; pwd++) {
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                pwd_matrix[i * cols + j] = 0;
-                for (int k = 0; k < cols; k++) {
-                    pwd_matrix[i * cols + j] += tmp_matrix[i * cols + k] * matrix[k * cols + j];
-                }
-                if (i != j && pwd_matrix[i * cols + j] != 0 && distance_matrix[i * cols + j] == 0) {
-                    distance_matrix[i * cols + j] = pwd;
-                    rimanenti--;
-                }
-            }
-        }
-        swap(&pwd_matrix, &tmp_matrix);
-    }
+    distanceMatrix(rows, cols, matrix, distance_matrix);
 
     /* Stampiamo la distance matrix */
     printf("\nDistance Matrix:\n");
@@ -67,7 +42,12 @@ int main(int argc, char const *argv[]) {
         }
         closeness_centrality[i] = (double) (node - 1) / sum_dist;
         printf("Node: %d\tScore: %f\n", (i+1), closeness_centrality[i]);
-    }  
+    }
+
+    /* free della memoria */
+    free(matrix);
+    free(distance_matrix);
+    free(closeness_centrality);
     
     return 0;
 }
