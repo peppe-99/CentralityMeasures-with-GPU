@@ -2,10 +2,14 @@
 #include<stdlib.h>
 #include"../../lib/utils.h"
 
+#define NODES 8
+
+void count_shortest_paths(int src, int dst, int v, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
+
 int main(int argc, char const *argv[]) {
 
     int node, rows, cols, num_shortest_path_svt, num_shortest_path_st;
-    int *matrix, *distance_matrix;
+    int *matrix, *distance_matrix, *visited;
     double *betweenness_centrality;
 
     /* Input: numero di nodi del grafo */
@@ -17,6 +21,7 @@ int main(int argc, char const *argv[]) {
     matrix = (int*)malloc(rows * cols * sizeof(int));
     distance_matrix = (int*)malloc(rows * cols * sizeof(int));
     betweenness_centrality = (double*)malloc(node * sizeof(int));
+    visited = (int*)malloc(node * sizeof(int));
 
     /* Leggiamo la matrice di esempio da un file */
     readIMatrix(rows, cols, matrix, "data/matrix.dat");
@@ -37,20 +42,15 @@ int main(int argc, char const *argv[]) {
         betweenness_centrality[v] = 0;
         /* Per ogni coppia di nodi s e t diversi da v */
         for (int s = 0; s < node; s++) {
-            for (int t = 0; t < node; t++) {
-                if (s != v && v != t && s != t) {
+            for (int t = s+1; t < node; t++) {
+                if (s != v && v != t) {
                     num_shortest_path_st = 0;
                     num_shortest_path_svt = 0;
 
-                    /* Contiamo gli shortest path tra s e t e quelli che contengono v */
-                    for (int i = 0; i < node; i++) {
-                        for (int j = 0; j < node; j++) {
-                            if ((distance_matrix[s * cols + i] + distance_matrix[j * cols + t] + matrix[i * cols + j]) == distance_matrix[s * cols + t] ||
-                                (distance_matrix[s * cols + j] + distance_matrix[i * cols + t] + matrix[j * cols + i]) == distance_matrix[s * cols + t]) {
-                                num_shortest_path_st++;
-                                if (i == v || j == v) num_shortest_path_svt++;
-                            }
-                        }
+                    if (matrix[s * cols + t] == 1) {
+                        num_shortest_path_st = 1;
+                    } else {
+                        count_shortest_paths(s, t, v, visited, matrix, distance_matrix[s * cols + t], 0, &num_shortest_path_st, &num_shortest_path_svt);
                     }
                     betweenness_centrality[v] += (double) num_shortest_path_svt / num_shortest_path_st;
                 }
@@ -65,4 +65,27 @@ int main(int argc, char const *argv[]) {
     free(betweenness_centrality);
 
     return 0;
+}
+
+void count_shortest_paths(int src, int dst, int v, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt){
+    visited[src] = 1;
+
+    /* Passo base */
+    if (src == dst) {
+        if (path_lenght == shortest_path) {
+            (*num_shortest_path_st)++;
+            if (visited[v]) {
+                (*num_shortest_path_svt)++;
+            }
+        }
+    } else {
+        /* Passo ricorsivo */
+        for (int i = 0; i < 8; i++) {
+            if (matrix[src * 8 + i] && visited[i] != 1) {
+                count_shortest_paths(i, dst, v, visited, matrix, shortest_path, path_lenght+1, num_shortest_path_st, num_shortest_path_svt);
+            }
+        }
+    }
+
+    visited[src] = 0;
 }
