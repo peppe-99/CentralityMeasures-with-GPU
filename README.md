@@ -1,2 +1,5 @@
 # NetworkAnalysis-with-GPU
-Questa repository è dedicata al mio progetto di tesi magistrale, il cui obiettivo è quello di implementare, utilizzando il parallelismo offerto dalle GPU, algoritmi che consentano di calcolare la centralità e la connettività di una rete.
+This repository is dedicated to my master's degree project. The main goal is to implement, using GPU parallelismo, algorithms that compute the "_centrality_" of each node and the "_connectivity_" of the network. For now, I have implemented these algorithms:
+- *Degree Centrality* (sequential & parallel version): in this case the "centrality" of a node depends on its degree;
+- *Closeness Centrality* (sequential & parallel version): here the "centrality" of a node depends on the distances separating it from other nodes in the network;
+- *Betweenness centrality* (sequential): here the "centrality" of a node depends on the number of "_shortest paths_" it partecipates in.
