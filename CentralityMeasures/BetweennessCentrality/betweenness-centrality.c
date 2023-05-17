@@ -2,9 +2,7 @@
 #include<stdlib.h>
 #include"../../lib/utils.h"
 
-#define NODES 8
-
-void count_shortest_paths(int src, int dst, int v, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
+void count_shortest_paths(int src, int dst, int v, int node, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
 
 int main(int argc, char const *argv[]) {
 
@@ -50,12 +48,12 @@ int main(int argc, char const *argv[]) {
                     if (matrix[s * cols + t] == 1) {
                         num_shortest_path_st = 1;
                     } else {
-                        count_shortest_paths(s, t, v, visited, matrix, distance_matrix[s * cols + t], 0, &num_shortest_path_st, &num_shortest_path_svt);
+                        count_shortest_paths(s, t, v, node, visited, matrix, distance_matrix[s * cols + t], 0, &num_shortest_path_st, &num_shortest_path_svt);
                     }
                     betweenness_centrality[v] += (double) num_shortest_path_svt / num_shortest_path_st;
                 }
             }
-        }        
+        }
         printf("Node: %d\tScore: %f\n", v+1, betweenness_centrality[v]);
     }
 
@@ -67,7 +65,7 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
-void count_shortest_paths(int src, int dst, int v, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt){
+void count_shortest_paths(int src, int dst, int v, int node, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt){
     visited[src] = 1;
 
     /* Passo base */
@@ -78,14 +76,15 @@ void count_shortest_paths(int src, int dst, int v, int *visited, int *matrix, in
                 (*num_shortest_path_svt)++;
             }
         }
-    } else {
+        visited[src] = 0;
+    } 
+    else {
         /* Passo ricorsivo */
-        for (int i = 0; i < 8; i++) {
-            if (matrix[src * 8 + i] && visited[i] != 1) {
-                count_shortest_paths(i, dst, v, visited, matrix, shortest_path, path_lenght+1, num_shortest_path_st, num_shortest_path_svt);
+        for (int i = 0; i < node; i++) {
+            if (matrix[src * node + i] && visited[i] != 1) {
+                count_shortest_paths(i, dst, v, node, visited, matrix, shortest_path, path_lenght+1, num_shortest_path_st, num_shortest_path_svt);
             }
         }
+        visited[src] = 0;
     }
-
-    visited[src] = 0;
 }
