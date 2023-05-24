@@ -42,5 +42,10 @@ int main(int argc, char const *argv[]) {
         printf("Score %d: %f\n", i, d_c[i]);
     }
 
+    /* free della memoria */
+    free(r);
+    free(c);
+    free(d_c);
+
     return 0;
 }
