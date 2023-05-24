@@ -58,7 +58,15 @@ int main(int argc, char const *argv[]) {
         printf("Score %d: %f\n", i+1, h_cc[i]);
     }
 
-
+    /* free della memoria */
+    free(h_r);
+    free(h_c);
+    free(h_cc);
+    cudaFree(d_r);
+    cudaFree(d_c);
+    cudaFree(d_cc);
+    cudaFree(d_dist);
+    
     return 0;
 }
 
