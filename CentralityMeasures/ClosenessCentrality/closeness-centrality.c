@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
         for (int j = 0; j < cols; j++) {
             sum_dist += distance_matrix[i * cols + j];
         }
-        closeness_centrality[i] = (double) (node - 1) / sum_dist;
+        closeness_centrality[i] = (double) node / sum_dist;
         printf("Node: %d\tScore: %f\n", (i+1), closeness_centrality[i]);
     }
 

@@ -139,6 +139,6 @@ __global__ void closeness_centrality_GPU(double *distance_matrix, double *closen
         for (int k = 0; k < node; k++){
             closeness_centrality[j] += distance_matrix[j * node + k];
         }
-        closeness_centrality[j] = (double) (node-1) / closeness_centrality[j];
+        closeness_centrality[j] = (double) node / closeness_centrality[j];
     }
 }
