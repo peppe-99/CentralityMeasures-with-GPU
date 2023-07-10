@@ -40,7 +40,7 @@ int readDMatrix(int rows, int cols, double *matrix, const char *filename) {
     return 1;
 }
 
-int readRCEMatrix(int *r, int *c, int r_size, int c_size, const char *r_path, const char *c_path) {
+int readRCEgraph(int *r, int *c, int r_size, int c_size, const char *r_path, const char *c_path) {
     
     FILE *R = fopen(r_path, "r");
     FILE *C = fopen(c_path, "r");

@@ -30,7 +30,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_c, c_size * sizeof(int));
     cudaMalloc((void **) &d_dc, n * sizeof(double));
 
-    readRCEMatrix(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
 
     /* Copia da host a device */
     cudaMemcpy(d_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);

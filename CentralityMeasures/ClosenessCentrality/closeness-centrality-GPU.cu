@@ -21,7 +21,7 @@ int main(int argc, char const *argv[]) {
     size_t byte_matrix, byte_vector;
 
     /* Input: nodi del grafo */
-    printf("Inserire numero dei nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &node);
     rows = node;
     cols = node;
@@ -112,7 +112,7 @@ int main(int argc, char const *argv[]) {
     /* Stampa delle closeness centralities */
     printf("\nCloseness Centrality\n");
     for (int i = 0; i < node; i++) {
-        printf("Node: %d\tScore: %f\n", (i+1), h_closeness_centralities[i]);
+        printf("Score %d: %f\n", (i+1), h_closeness_centralities[i]);
     }
 
     /* Distruggo l'handle */
