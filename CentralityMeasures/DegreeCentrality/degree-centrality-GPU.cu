@@ -15,7 +15,7 @@ int main(int argc, char const *argv[]) {
     size_t int_byte_matrix, byte_vector;
 
     /* Input: nodi del grafo */
-    printf("Inserisci numero di nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &node);
     rows = node;
     cols = node;
@@ -47,8 +47,6 @@ int main(int argc, char const *argv[]) {
         (cols + blockDim.x - 1) / blockDim.x,
         (rows + blockDim.y - 1) / blockDim.y
     );
-    printf("blockDim = (%d,%d)\n", blockDim.x, blockDim.y);
-    printf("gridDim = (%d,%d)\n", gridDim.x, gridDim.y);
 
     /* Inovazione del Kernel */
     degree_centrality_GPU<<<gridDim, blockDim>>>(d_matrix, d_degree_centrality, node);
@@ -60,7 +58,7 @@ int main(int argc, char const *argv[]) {
     printf("\nDeegre Centrality\n");
     for (int i  = 0; i < node; i++) {
         h_degree_centrality[i] /= (double) (node-1);
-        printf("Node: %d\tScore: %f\n", i+1, h_degree_centrality[i]);
+        printf("Score %d: %f\n", i+1, h_degree_centrality[i]);
     }
 
     /* free della memoria */
