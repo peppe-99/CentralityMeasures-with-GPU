@@ -9,7 +9,7 @@ int main(int argc, char const *argv[]) {
     int *matrix;
     double *degree_centrality_vector;
 
-    printf("Inserire numero di nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &node);
     rows = node;
     cols = node;
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
         }
         degree_centrality_vector[i] /= (double)(node-1);
 
-        printf("Node: %d\tScore: %f\n", i+1, degree_centrality_vector[i]);
+        printf("Score %d: %f\n", i+1, degree_centrality_vector[i]);
     }
     
     /* free della memoria */
