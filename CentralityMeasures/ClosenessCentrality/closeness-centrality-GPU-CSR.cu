@@ -1,25 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
+#include"../../lib/utils.h"
 
 __global__ void cc_kernel(int n, int *R, int *C, double *cc, int *distance);
 
 int main(int argc, char const *argv[]) {
     
-    FILE *R = fopen("data/row_offsets.dat", "r");
-    FILE *C = fopen("data/column_indices.dat", "r");
-
     int n, r_size, c_size;
     int *h_r, *h_c;
     int *d_r, *d_c, *d_dist;
     double *h_cc, *d_cc;
 
     /* Input: numero di nodi e archi del grafo */
-    printf("Inserire numero di nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &n);
     r_size = n + 1;
 
-    printf("Inserire numero di archi: ");
+    printf("Number of edges: ");
     scanf("%d", &c_size);
 
     /* allocazione strutture dati host */
@@ -33,13 +31,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_dist, n * sizeof(int));
     cudaMalloc((void **) &d_cc, n * sizeof(double));
 
-    /* Leggo da file il columns indices ed il row offsets array */
-    for (int i = 0; i < r_size; i++) {
-        fscanf(R, "%d\n", &h_r[i]);
-    }
-    for (int i = 0; i < c_size; i++) {
-        fscanf(C, "%d\n", &h_c[i]);
-    }
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
 
     /* copia gli array row_offests e column_indices sul device */
     cudaMemcpy(d_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);
