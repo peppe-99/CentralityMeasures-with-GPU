@@ -10,7 +10,7 @@ int main(int argc, char const *argv[]) {
     double *closeness_centrality;
 
     /* Input: numero di nodi del grafo */
-    printf("Inserire numero di nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &node);
     rows = node;
     cols = node;
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]) {
             sum_dist += distance_matrix[i * cols + j];
         }
         closeness_centrality[i] = (double) node / sum_dist;
-        printf("Node: %d\tScore: %f\n", (i+1), closeness_centrality[i]);
+        printf("Score %d: %f\n", (i+1), closeness_centrality[i]);
     }
 
     /* free della memoria */
