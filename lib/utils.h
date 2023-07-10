@@ -5,4 +5,4 @@ extern int readRCEMatrix(int *r, int *c, int r_size, int c_size, const char *r_p
 extern void printIMatrix(int rows, int cols, int *matrix);
 extern void printDMatrix(int rows, int cols, double *matrix);
 extern void swap(int **current_matrix, int **new_matrix);
-extern void distanceMatrix(int rows, int cols, int *matrix, int *distance_matrix);
+extern void distanceMatrix(int rows, int cols, int *matrix, int *distances);
