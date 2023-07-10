@@ -39,6 +39,29 @@ int readDMatrix(int rows, int cols, double *matrix, const char *filename) {
     return 1;
 }
 
+int readRCEMatrix(int *r, int *c, int r_size, int c_size, const char *r_path, const char *c_path) {
+        
+    FILE *R = fopen(r_path, "r");
+    FILE *C = fopen(c_path, "r");
+
+    if (R == NULL || C == NULL) {
+        return 0;
+    }
+
+    for (int i = 0; i < r_size; i++) {
+        fscanf(R, "%d\n", &r[i]);
+    }
+
+    for (int i = 0; i < c_size; i++) {
+        fscanf(C, "%d\n", &c[i]);
+    }
+
+    fclose(R);
+    fclose(C);
+
+    return 1;
+}
+
 /* Funzione per lo swap di matrici */
 void swap(int **current_matrix, int **new_matrix) {
     int *temp = *current_matrix;
