@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<limits.h>
 #include"utils.h"
 
 /* Funzioni per leggere una matrice da un file*/
@@ -88,35 +89,29 @@ void printDMatrix(int rows, int cols, double *matrix) {
     }
 }
 
-void distanceMatrix(int rows, int cols, int *matrix, int *distance_matrix) {
-
-    int *tmp_matrix = (int*)malloc(rows * cols * sizeof(int));
-    int *pwd_matrix = (int*)malloc(rows * cols * sizeof(int));
-    int rimanenti = (rows * cols) - rows;
-
+void distanceMatrix(int rows, int cols, int *matrix, int *distances) {
+    
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            distance_matrix[i * cols + j] = matrix[i * cols + j];
-            tmp_matrix[i * cols + j] = matrix[i * cols + j];
-            if (matrix[i * cols + j] != 0) rimanenti--;
+            if (i != j && matrix[i * cols + j] == 0) {
+                distances[i * cols + j] = INT_MAX;
+            }
+            else {
+                distances[i * cols + j] = matrix[i * cols + j];
+            }        
         }
     }
 
-    for (int pwd = 2; rimanenti != 0; pwd++) {
+    for (int k = 0; k < rows; k++) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                pwd_matrix[i * cols + j] = 0;
-                for (int k = 0; k < cols; k++) {
-                    pwd_matrix[i * cols + j] += tmp_matrix[i * cols + k] * matrix[k * cols + j];
-                }
-                if (i != j && pwd_matrix[i * cols + j] != 0 && distance_matrix[i * cols + j] == 0) {
-                    distance_matrix[i * cols + j] = pwd;
-                    rimanenti--;
-                }
+                if (
+                    distances[i * cols + k] != INT_MAX && 
+                    distances[k * cols + j] != INT_MAX &&
+                    distances[i * cols + k] + distances[k * cols + j] < distances[i * cols + j]
+                )
+                distances[i * cols + j] = distances[i * cols + k] + distances[k * cols + j];
             }
         }
-        swap(&pwd_matrix, &tmp_matrix);
     }
-    free(tmp_matrix);
-    free(pwd_matrix);
 }
