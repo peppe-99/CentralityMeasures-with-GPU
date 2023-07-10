@@ -14,13 +14,21 @@ closeness-centrality-GPU: closeness-centrality-GPU.o utils-GPU.o
 	nvcc closeness-centrality-GPU.o utils.o -o closeness-centrality-GPU.out -lcublas
 	./closeness-centrality-GPU.out
 
-degree-centrality-sequential: degree-centrality.o utils.o
-	gcc degree-centrality.o utils.o -o degree-centrality-sequential.out
-	./degree-centrality-sequential.out
+dc-CPU: dc.o utils.o
+	gcc dc.o utils.o -o dc-CPU.out
+	./dc-CPU.out
 
-degree-centrality-GPU: degree-centrality-GPU.o utils-GPU.o
-	nvcc degree-centrality-GPU.o utils.o -o degree-centrality-GPU.out
-	./degree-centrality-GPU.out
+dc-CPU-RCE: dc-RCE.o utils.o
+	gcc dc-RCE.o utils.o -o dc-CPU-RCE.out
+	./dc-CPU-RCE.out
+
+dc-GPU: dc-GPU.o utils-GPU.o
+	nvcc dc-GPU.o utils.o -o dc-GPU.out
+	./dc-GPU.out
+
+dc-GPU-RCE: dc-GPU-RCE.o utils-GPU.o
+	nvcc dc-GPU-RCE.o utils.o -o dc-GPU-RCE.out
+	./dc-GPU-RCE.out
 
 betweenness-centrality.o:
 	gcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality.c
@@ -34,11 +42,17 @@ closeness-centrality.o:
 closeness-centrality-GPU.o:
 	nvcc -c ./CentralityMeasures/ClosenessCentrality/closeness-centrality-GPU.cu
 
-degree-centrality.o:
-	gcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality.c
+dc.o:
+	gcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality.c -o dc.o
 
-degree-centrality-GPU.o:
-	nvcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality-GPU.cu
+dc-RCE.o:
+	gcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality-RCE.c -o dc-RCE.o
+
+dc-GPU.o:
+	nvcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality-GPU.cu -o dc-GPU.o
+
+dc-GPU-RCE.o:
+	nvcc -c ./CentralityMeasures/DegreeCentrality/degree-centrality-GPU-RCE.cu -o dc-GPU-RCE.o
 
 utils.o:
 	gcc -c ./lib/utils.c
