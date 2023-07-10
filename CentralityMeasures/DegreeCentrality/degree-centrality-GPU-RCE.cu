@@ -1,26 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdlib.h>
+#include"../../lib/utils.h"
 
 __global__ void dc_kernel(int n, int *R, int *C, double *dc);
 
 int main(int argc, char const *argv[]) {
     
-    /* File che rappresentano il grafo in formato RCE */
-    FILE *R = fopen("data/row_offsets.dat", "r");
-    FILE *C = fopen("data/column_indices.dat", "r");
-
     int n, r_size, c_size;
     int *h_r, *h_c;
     int *d_r, *d_c;
     double *h_dc, *d_dc;
 
     /* Input: numero di nodi e archi del grafo */
-    printf("Inserire numero di nodi: ");
+    printf("Number of nodes: ");
     scanf("%d", &n);
     r_size = n + 1;
 
-    printf("Inserire numero di archi: ");
+    printf("Number of edges: ");
     scanf("%d", &c_size);
 
     /* Allocazione strutture dati host */
@@ -33,13 +30,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_c, c_size * sizeof(int));
     cudaMalloc((void **) &d_dc, n * sizeof(double));
 
-    /* Leggo da file il columns indices ed il row offsets array */
-    for (int i = 0; i < r_size; i++) {
-        fscanf(R, "%d\n", &h_r[i]);
-    }
-    for (int i = 0; i < c_size; i++) {
-        fscanf(C, "%d\n", &h_c[i]);
-    }
+    readRCEMatrix(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
 
     /* Copia da host a device */
     cudaMemcpy(d_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);
@@ -56,7 +47,7 @@ int main(int argc, char const *argv[]) {
     cudaMemcpy(h_dc, d_dc, n * sizeof(double), cudaMemcpyDeviceToHost);
 
     /* Stampa dei risultati */
-    printf("Degree Centrality:\n");
+    printf("\nDegree Centrality:\n");
     for (int i = 0; i < n; i++) {
         printf("Score %d: %f\n", i+1, h_dc[i]);
     }
