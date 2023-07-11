@@ -27,5 +27,5 @@ for i in range(rows):
         if (adj_matrix[i][j] == 1):
             G.add_edge(i+1, j+1)
 
-nx.draw(G, with_labels=True)
+nx.draw_kamada_kawai(G, with_labels=True)
 plt.show()
