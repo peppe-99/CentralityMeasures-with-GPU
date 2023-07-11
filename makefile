@@ -1,6 +1,10 @@
-betweenness-centrality-sequential: betweenness-centrality.o utils.o
-	gcc betweenness-centrality.o utils.o -o betweenness-centrality-sequential.out
-	./betweenness-centrality-sequential.out
+bc-CPU: bc.o utils.o
+	gcc bc.o utils.o -o bc-CPU.out
+	./bc-CPU.out
+
+bc-CPU-CSR: bc-CSR.o utils.o
+	gcc bc-CSR.o utils.o -o bc-CPU-CSR.out
+	./bc-CPU-CSR.out
 
 bc-GPU-CSR: bc-GPU-CSR.o utils-GPU.o
 	nvcc bc-GPU-CSR.o utils.o -o bc-GPU-CSR.out
@@ -38,8 +42,11 @@ dc-GPU-CSR: dc-GPU-CSR.o utils-GPU.o
 	nvcc dc-GPU-CSR.o utils.o -o dc-GPU-CSR.out
 	./dc-GPU-CSR.out
 
-betweenness-centrality.o:
-	gcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality.c
+bc.o:
+	gcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality.c -o bc.o
+
+bc-CSR.o:
+	gcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality-CSR.c -o bc-CSR.o
 
 bc-GPU-CSR.o:
 	nvcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality-GPU-CSR.cu -o bc-GPU-CSR.o
