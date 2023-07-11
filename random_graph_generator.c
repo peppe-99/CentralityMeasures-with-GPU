@@ -52,7 +52,6 @@
     for (int i = 0; i < nodes; i++) {
         for (int j = 0; j < nodes; j++) {
             if (matrix[i * nodes + j] == 1) {
-                printf("%d\n", neighbors % c_size);
                 c[neighbors % c_size] = j;
                 neighbors++;
             }
