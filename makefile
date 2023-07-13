@@ -6,6 +6,10 @@ bc-CPU-CSR: bc-CSR.o utils.o
 	gcc bc-CSR.o utils.o -o bc-CPU-CSR.out
 	./bc-CPU-CSR.out
 
+bc-GPU: bc-GPU.o utils-GPU.o
+	nvcc bc-GPU.o utils.o -o bc-GPU.out
+	./bc-GPU.out
+
 bc-GPU-CSR: bc-GPU-CSR.o utils-GPU.o
 	nvcc bc-GPU-CSR.o utils.o -o bc-GPU-CSR.out
 	./bc-GPU-CSR.out
@@ -47,6 +51,9 @@ bc.o:
 
 bc-CSR.o:
 	gcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality-CSR.c -o bc-CSR.o
+
+bc-GPU.o:
+	nvcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality-GPU.cu -o bc-GPU.o
 
 bc-GPU-CSR.o:
 	nvcc -c ./CentralityMeasures/BetweennessCentrality/betweenness-centrality-GPU-CSR.cu -o bc-GPU-CSR.o
