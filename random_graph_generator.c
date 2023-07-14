@@ -17,7 +17,7 @@
     scanf("%d", &nodes);
     r_size = nodes + 1;
 
-    printf("Number of edges (min. %d, max. %d): ", nodes - 1, nodes * (nodes - 1));
+    printf("Number of edges (min. %d, max. %d): ", nodes - 1, (nodes * (nodes - 1)) / 2);
     scanf("%d", &edges);
     c_size = edges * 2;
 
