@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
-f = open("data/matrix.dat", "r")
+f = open("data/demo/matrix.dat", "r")
 
 adj_matrix = []
 row_matrix = []
