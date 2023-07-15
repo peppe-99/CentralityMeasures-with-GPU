@@ -47,46 +47,46 @@ dc-GPU-CSR: dc-GPU-CSR.o utils-GPU.o
 	./dc-GPU-CSR.out
 
 bc.o:
-	gcc -c ./src/BetweennessCentrality/betweenness-centrality.c -o bc.o
+	gcc -c src/BetweennessCentrality/betweenness-centrality.c -o bc.o
 
 bc-CSR.o:
-	gcc -c ./src/BetweennessCentrality/betweenness-centrality-CSR.c -o bc-CSR.o
+	gcc -c src/BetweennessCentrality/betweenness-centrality-CSR.c -o bc-CSR.o
 
 bc-GPU.o:
-	nvcc -c ./src/BetweennessCentrality/betweenness-centrality-GPU.cu -o bc-GPU.o
+	nvcc -c src/BetweennessCentrality/betweenness-centrality-GPU.cu -o bc-GPU.o
 
 bc-GPU-CSR.o:
-	nvcc -c ./src/BetweennessCentrality/betweenness-centrality-GPU-CSR.cu -o bc-GPU-CSR.o
+	nvcc -c src/BetweennessCentrality/betweenness-centrality-GPU-CSR.cu -o bc-GPU-CSR.o
 
 cc.o:
-	gcc -c ./src/ClosenessCentrality/closeness-centrality.c -o cc.o
+	gcc -c src/ClosenessCentrality/closeness-centrality.c -o cc.o
 
 cc-CSR.o:
-	gcc -c ./src/ClosenessCentrality/closeness-centrality-CSR.c -o cc-CSR.o
+	gcc -c src/ClosenessCentrality/closeness-centrality-CSR.c -o cc-CSR.o
 
 cc-GPU.o:
-	nvcc -c ./src/ClosenessCentrality/closeness-centrality-GPU.cu -o cc-GPU.o
+	nvcc -c src/ClosenessCentrality/closeness-centrality-GPU.cu -o cc-GPU.o
 
 cc-GPU-CSR.o:
-	nvcc -c ./src/ClosenessCentrality/closeness-centrality-GPU-CSR.cu -o cc-GPU-CSR.o
+	nvcc -c src/ClosenessCentrality/closeness-centrality-GPU-CSR.cu -o cc-GPU-CSR.o
 
 dc.o:
-	gcc -c ./src/DegreeCentrality/degree-centrality.c -o dc.o
+	gcc -c src/DegreeCentrality/degree-centrality.c -o dc.o
 
 dc-CSR.o:
-	gcc -c ./src/DegreeCentrality/degree-centrality-CSR.c -o dc-CSR.o
+	gcc -c src/DegreeCentrality/degree-centrality-CSR.c -o dc-CSR.o
 
 dc-GPU.o:
-	nvcc -c ./src/DegreeCentrality/degree-centrality-GPU.cu -o dc-GPU.o
+	nvcc -c src/DegreeCentrality/degree-centrality-GPU.cu -o dc-GPU.o
 
 dc-GPU-CSR.o:
-	nvcc -c ./src/DegreeCentrality/degree-centrality-GPU-CSR.cu -o dc-GPU-CSR.o
+	nvcc -c src/DegreeCentrality/degree-centrality-GPU-CSR.cu -o dc-GPU-CSR.o
 
 utils.o:
-	gcc -c ./lib/utils.c
+	gcc -c include/utils.c
 
 utils-GPU.o:
-	nvcc -c ./lib/utils.cu
+	nvcc -c include/utils.cu
 
 clean:
 	rm -rf *.o *.out
