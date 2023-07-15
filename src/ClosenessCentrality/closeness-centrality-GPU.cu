@@ -4,7 +4,7 @@
 #include <time.h>
 #include <cuda_runtime.h>
 #include <cublas_v2.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 __global__ void closeness_centrality_GPU(double *distance_matrix, double *closeness_centrality, int node);
 
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_closeness_centralities, byte_vector);
 
     /* Leggiamo la matrice di esempio da un file */
-    readDMatrix(rows, cols, h_matrix, "data/matrix.dat");
+    readDMatrix(rows, cols, h_matrix, "data/demo/matrix.dat");
     printDMatrix(rows, cols, h_matrix);
 
     /* Copiamo le distance che valgono 1 */

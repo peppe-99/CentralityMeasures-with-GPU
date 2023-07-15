@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 void count_shortest_paths(int src, int dst, int v, int node, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
 
@@ -22,7 +22,7 @@ int main(int argc, char const *argv[]) {
     visited = (int*)malloc(node * sizeof(int));
 
     /* Leggiamo la matrice di esempio da un file */
-    readIMatrix(rows, cols, matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, matrix, "data/demo/matrix.dat");
 
     /* Stampiamo la matrice di esempio */
     printf("Matrice di Adiacenza:\n");

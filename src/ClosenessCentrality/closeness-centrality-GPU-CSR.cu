@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 __global__ void cc_kernel(int n, int *R, int *C, double *cc, int *distance);
 
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_dist, n * sizeof(int));
     cudaMalloc((void **) &d_cc, n * sizeof(double));
 
-    readRCEgraph(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     /* copia gli array row_offests e column_indices sul device */
     cudaMemcpy(d_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);

@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include <stdbool.h>
 #include<cuda.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 __global__ void bc_kernel(int n, int *R, int *C, double *bc, int *sigma, int *distance, double *dependency);
 
@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &dev_bc, n * sizeof(double));
     cudaMalloc((void **) &dev_dependecy, n * sizeof(double));
 
-    readRCEgraph(h_r, h_c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     /* copio gli array row_offests e column_indices sul device */
     cudaMemcpy(dev_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);

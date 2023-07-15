@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 int main(int argc, char const *argv[]) {
     
@@ -22,7 +22,7 @@ int main(int argc, char const *argv[]) {
     c = (int*)malloc(c_size * sizeof(int));
     d_c = (double*)malloc(n * sizeof(int));
 
-    readRCEgraph(r, c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
+    readRCEgraph(r, c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     /* Calcolo e stampa della degree-centrality */
     printf("\nDegree Centrality:\n");

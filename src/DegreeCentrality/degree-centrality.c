@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 int main(int argc, char const *argv[]) {
 
@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
     degree_centrality_vector = (double*)malloc(node * sizeof(double));
 
     /* Leggiamo la matrice di esempio da un file */
-    readIMatrix(rows, cols, matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, matrix, "data/demo/matrix.dat");
 
     /* Stampiamo la matrice di esempio */
     printIMatrix(rows, cols, matrix);

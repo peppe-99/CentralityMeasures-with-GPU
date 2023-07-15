@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<stdbool.h>
 #include<cuda.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 __global__ void bc_kernel(int n, int *matrix, double *bc, int *sigma, int *distance, double *dependency);
 
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_dependency, nodes * sizeof(double));
     cudaMalloc((void **) &d_bc, nodes * sizeof(double));
 
-    readIMatrix(rows, cols, h_matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, h_matrix, "data/demo/matrix.dat");
 
     /* Copia della matrice da host a device */
     cudaMemcpy(d_matrix, h_matrix, rows * cols * sizeof(int), cudaMemcpyHostToDevice);

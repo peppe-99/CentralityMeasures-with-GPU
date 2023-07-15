@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <cuda.h>
 #include <time.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 __global__ void degree_centrality_GPU(int *matrix, double *degree_centrality, int node);
 
@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
     h_degree_centrality = (double*)malloc(byte_vector);
 
     /* Lettura della matrice da file */
-    readIMatrix(rows, cols, h_matrix, "data/matrix.dat");
+    readIMatrix(rows, cols, h_matrix, "data/demo/matrix.dat");
 
     /* Stampa della matrice */
     printIMatrix(rows, cols, h_matrix);

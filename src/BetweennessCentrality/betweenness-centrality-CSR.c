@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<limits.h>
-#include"../../lib/utils.h"
+#include"../../include/utils.h"
 
 void count_shortest_paths(int src, int dst, int v, int n, int *visited, int *r, int *c, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
 
@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
     b_c = (double*)malloc(n * sizeof(double));
     distances = (int*)malloc(n * n * sizeof(int));
 
-    readRCEgraph(r, c, r_size, c_size, "data/row_offsets.dat", "data/column_indices.dat");
+    readRCEgraph(r, c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     /* Calcoliamo la distance matrix */
     for (int i = 0; i < r_size; i++) {
