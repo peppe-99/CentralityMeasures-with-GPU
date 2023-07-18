@@ -104,7 +104,7 @@ int main(int argc, char const *argv[]) {
     }
 
     /* NC(i,j) = [e^A]_ij */
-    printf("\nNetwork Communicability:\n");
+    printf("\nCommunicability between nodes:\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             printf("Score (%d, %d): %f\n", (i+1), (j+1), h_exp_matrix[i * cols + j]);
