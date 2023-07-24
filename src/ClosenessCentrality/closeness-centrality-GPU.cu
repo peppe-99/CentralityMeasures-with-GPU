@@ -1,24 +1,25 @@
-#include <assert.h>
-#include <stdio.h>
-#include <cuda.h>
-#include <time.h>
-#include <cuda_runtime.h>
-#include <cublas_v2.h>
+#include<assert.h>
+#include<stdio.h>
+#include<cuda.h>
+#include<time.h>
+#include<cuda_runtime.h>
+#include<cublas_v2.h>
 #include"../../include/utils.h"
 
 __global__ void closeness_centrality_GPU(double *distance_matrix, double *closeness_centrality, int node);
 
 int main(int argc, char const *argv[]) {
     
-    int rows, cols, node, to_inizialize;
-    double alpha = 1.0;
-    double beta = 1.0;
+    int rows, cols, node, to_inizialize, max = 0;
+    double alpha = 1.0, beta = 1.0;
+    float time1, time2;
 
     double *h_matrix, *h_distance_matrix, *h_pwd_matrix, *h_closeness_centralities;
     double *d_matrix, *d_distance_matrix, *d_pwd_matrix, *d_closeness_centralities;
     
     cublasHandle_t handle;
     size_t byte_matrix, byte_vector;
+    cudaEvent_t start, stop;
 
     /* Input: nodi del grafo */
     printf("Number of nodes: ");
@@ -59,7 +60,19 @@ int main(int argc, char const *argv[]) {
     cublasSetMatrix(rows, cols, sizeof(double), h_matrix, rows, d_matrix, rows);
     cublasSetMatrix(rows, cols, sizeof(double), h_matrix, rows, d_pwd_matrix, rows);
 
-    
+    /* Configurazione del kernel */
+    dim3 blockDim(8, 12);
+    dim3 gridDim(
+        (cols + blockDim.x - 1) / blockDim.x,
+        (rows + blockDim.y - 1) / blockDim.y
+    );
+
+    /* Creiamo gli eventi per il tempo */
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start); // tempo di inizio
+
     /* Contiamo quante celle della distance matrix già sono valorizzate*/
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -88,31 +101,45 @@ int main(int argc, char const *argv[]) {
                 }
             }
         }
-    } 
+    }
 
-    /* Stampiamo la distance matrix */
-    printf("\nDistance matrix\n");
-    printDMatrix(rows, cols, h_distance_matrix);
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time1, start, stop);
 
     /* Copiamo sul device la distance matrix */
     cudaMemcpy(d_distance_matrix, h_distance_matrix, byte_matrix, cudaMemcpyHostToDevice);
 
-    /* Configurazione del kernel */
-    dim3 blockDim(32, 32);
-    dim3 gridDim(
-        (cols + blockDim.x - 1) / blockDim.x,
-        (rows + blockDim.y - 1) / blockDim.y
-    );
+    cudaEventRecord(start); // tempo di inizio
 
     /* Invochiamo il kernel per sommare le righe*/
     closeness_centrality_GPU<<<gridDim, blockDim>>>(d_distance_matrix, d_closeness_centralities, node);
 
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time2, start, stop);
+
+    /* Copia device -> host dei risultati */
     cudaMemcpy(h_closeness_centralities, d_closeness_centralities, byte_vector, cudaMemcpyDeviceToHost);
 
-    /* Stampa delle closeness centralities */
-    printf("\nCloseness Centrality\n");
+    /* Individuazione del nodo più centrale */
     for (int i = 0; i < node; i++) {
-        printf("Score %d: %f\n", (i+1), h_closeness_centralities[i]);
+        if (h_closeness_centralities[i] > h_closeness_centralities[max]) {
+            max = i;
+        }
+    }
+
+    /* Stampa dei risultati */
+    printf("\nCloseness Centrality\n");
+    printf("\nmax: %d - score: %f\n", max+1, h_closeness_centralities[max]);
+    printf("\ntime: %f ms\n\n", time1+time2);
+
+    if (node <= 10) {
+        for (int i = 0; i < node; i++) {
+            printf("Score %d: %f\n", (i+1), h_closeness_centralities[i]);
+        }
     }
 
     /* Distruggo l'handle */
