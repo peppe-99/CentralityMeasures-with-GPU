@@ -1,6 +1,10 @@
-sgc: sgc.o utils-GPU.o
-	nvcc sgc.o utils.o -o sgc.out -lcublas
-	./sgc.out
+sgc-CPU: sgc.o utils.o
+	gcc sgc.o utils.o -o sgc-CPU.out
+	./sgc-CPU.out
+
+sgc-GPU: sgc-GPU.o utils-GPU.o
+	nvcc sgc-GPU.o utils.o -o sgc-GPU.out -lcublas
+	./sgc-GPU.out
 
 bc-CPU: bc.o utils.o
 	gcc bc.o utils.o -o bc-CPU.out
@@ -51,7 +55,10 @@ dc-GPU-CSR: dc-GPU-CSR.o utils-GPU.o
 	./dc-GPU-CSR.out
 
 sgc.o:
-	nvcc -c src/SubGraphCentrality/subgraph-centrality.cu -o sgc.o
+	gcc -c src/SubGraphCentrality/subgraph-centrality.c -o sgc.o
+
+sgc-GPU.o:
+	nvcc -c src/SubGraphCentrality/subgraph-centrality.cu -o sgc-GPU.o
 
 bc.o:
 	gcc -c src/BetweennessCentrality/betweenness-centrality.c -o bc.o
