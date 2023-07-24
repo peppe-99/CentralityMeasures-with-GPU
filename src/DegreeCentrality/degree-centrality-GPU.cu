@@ -82,11 +82,7 @@ int main(int argc, char const *argv[]) {
     printf("\ntime: %f ms\n\n", time);
     
     if (node <= 10) {
-    for (int i  = 0; i < node; i++) {
-    for (int i  = 0; i < node; i++) {
-        h_degree_centrality[i] /= (double) (node-1);
         for (int i  = 0; i < node; i++) {
-        h_degree_centrality[i] /= (double) (node-1);
             printf("Score %d: %f\n", i+1, h_degree_centrality[i]);
         }
     }
