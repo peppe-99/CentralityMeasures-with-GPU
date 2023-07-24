@@ -114,7 +114,6 @@ int main(int argc, char const *argv[]) {
     /* TC(i) = sum_{j=1}^n [e^A]_ij */
     printf("\nTotal Node Communicability:\n");
     for (int i = 0; i < rows; i++) {
-        h_tc[i] = 0.0;
         for (int j = 0; j < cols; j++) {
             h_tc[i] += h_exp_matrix[i * cols + j];
         }
