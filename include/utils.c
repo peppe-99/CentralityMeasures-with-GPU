@@ -72,20 +72,24 @@ void swap(int **current_matrix, int **new_matrix) {
 
 /* Funzioni per la stampa di una matrice */
 void printIMatrix(int rows, int cols, int *matrix) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%d\t", matrix[i * cols + j]);
+    if (rows <= 10 && cols <= 10) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                printf("%d\t", matrix[i * cols + j]);
+            }
+            printf("\n");
         }
-        printf("\n");
     }
 }
 
 void printDMatrix(int rows, int cols, double *matrix) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("%.f\t", matrix[i * cols + j]);
+    if (rows <= 10 && cols <= 10) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                printf("%.f\t", matrix[i * cols + j]);
+            }
+            printf("\n");
         }
-        printf("\n");
     }
 }
 
