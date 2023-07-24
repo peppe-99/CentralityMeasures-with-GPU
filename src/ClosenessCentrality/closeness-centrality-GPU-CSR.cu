@@ -1,16 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <cuda.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<cuda.h>
 #include"../../include/utils.h"
 
 __global__ void cc_kernel(int n, int *R, int *C, double *cc, int *distance);
 
 int main(int argc, char const *argv[]) {
     
-    int n, r_size, c_size;
+    int n, r_size, c_size, max = 0;
     int *h_r, *h_c;
     int *d_r, *d_c, *d_dist;
     double *h_cc, *d_cc;
+
+    float time;
+
+    cudaEvent_t start, stop;
 
     /* Input: numero di nodi e archi del grafo */
     printf("Number of nodes: ");
@@ -19,6 +23,7 @@ int main(int argc, char const *argv[]) {
 
     printf("Number of edges: ");
     scanf("%d", &c_size);
+    c_size *= 2;
 
     /* allocazione strutture dati host */
     h_r = (int*)malloc(r_size * sizeof(int));
@@ -31,23 +36,49 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_dist, n * sizeof(int));
     cudaMalloc((void **) &d_cc, n * sizeof(double));
 
-    readRCEgraph(h_r, h_c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/dense/16000/random_r.dat", "data/dense/16000/random_c.dat");
 
     /* copia gli array row_offests e column_indices sul device */
     cudaMemcpy(d_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_c, h_c, c_size * sizeof(int), cudaMemcpyHostToDevice);
 
     /* configurazione del Kernel */
-    dim3 blockDim(64);
-    dim3 gridDim((n + blockDim.x - 1) / blockDim.x);
+    dim3 blockDim(1024);
+    dim3 gridDim(1);
     
+    /* Creiamo gli eventi per il tempo */
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start); // tempo di inizio
+
+    /* Invocazione del kernel */
     cc_kernel<<<gridDim, blockDim>>>(n, d_r, d_c, d_cc, d_dist);
 
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time, start, stop);
+
+    /* Copia dei risultati da device a host */
     cudaMemcpy(h_cc, d_cc, n * sizeof(double), cudaMemcpyDeviceToHost);
 
-    printf("Closeness Centrality:\n");
+    /* Individuazione del nodo più centrale */
     for (int i = 0; i < n; i++) {
-        printf("Score %d: %f\n", i+1, h_cc[i]);
+        if (h_cc[i] > h_cc[max]) {
+            max = i;
+        }
+    }
+
+    /* Stampa dei risultati */
+    printf("Closeness Centrality\n");
+    printf("\nmax: %d - score: %f\n", max+1, h_cc[max]);
+    printf("\ntime: %f ms\n\n", time);
+
+    if (n <= 10) {
+        for (int i = 0; i < n; i++) {
+            printf("Score %d: %f\n", i+1, h_cc[i]);
+        }
     }
 
     /* free della memoria */
