@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
     /* Allocazione strutture dati host */
     h_r = (int*)malloc(r_size * sizeof(int));
     h_c = (int*)malloc(c_size * sizeof(int));
-    h_dc = (double*)malloc(n * sizeof(int));
+    h_dc = (double*)malloc(n * sizeof(double));
 
     /* Allocazione strutture dati device */
     cudaMalloc((void **) &d_r, r_size * sizeof(int));
