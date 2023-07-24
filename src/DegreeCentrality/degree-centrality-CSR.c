@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
     /* Allocazione delle strutture dati */
     r = (int*)malloc(r_size * sizeof(int));
     c = (int*)malloc(c_size * sizeof(int));
-    d_c = (double*)malloc(n * sizeof(int));
+    d_c = (double*)malloc(n * sizeof(double));
 
     readRCEgraph(r, c, r_size, c_size, "data/dense/16000/random_r.dat", "data/dense/16000/random_c.dat");
 
