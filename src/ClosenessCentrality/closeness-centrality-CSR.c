@@ -29,7 +29,7 @@ int main(int argc, char const *argv[]) {
     c_c = (double*)malloc(n * sizeof(double));
     distances = (int*)malloc(n * n * sizeof(int));
 
-    readRCEgraph(r, c, r_size, c_size, "data/dense/4000/random_r.dat", "data/dense/4000/random_c.dat");
+    readRCEgraph(r, c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     begin = clock();
 
