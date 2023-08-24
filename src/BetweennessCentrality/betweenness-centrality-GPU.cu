@@ -9,10 +9,13 @@ __global__ void bc_kernel(int n, int *matrix, double *bc, int *sigma, int *dista
 int main(int argc, char const *argv[]) {
     
     int nodes, rows, cols;
+    float time;
     
     int *h_matrix, *d_matrix, *d_distances, *d_sigma;
     
     double *h_bc, *d_bc, *d_dependency;
+
+    cudaEvent_t start, stop;
 
     /* Input: nodi del grafo */
     printf("Number of nodes: ");
@@ -36,18 +39,39 @@ int main(int argc, char const *argv[]) {
     /* Copia della matrice da host a device */
     cudaMemcpy(d_matrix, h_matrix, rows * cols * sizeof(int), cudaMemcpyHostToDevice);
 
+    /* Configurazione del kernel */
     dim3 blockDim(64);
     dim3 gridDim((nodes + blockDim.x - 1) / blockDim.x);
 
+    /* Creiamo gli eventi per il tempo */
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start); // tempo di inizio
+
+    /* Invocazione del kernel */
     bc_kernel<<<gridDim, blockDim>>>(nodes, d_matrix, d_bc, d_sigma, d_distances, d_dependency);
     cudaDeviceSynchronize();
 
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time, start, stop);
+
+    /* Copia dei risultati */
     cudaMemcpy(h_bc, d_bc, nodes * sizeof(double), cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < nodes; i++) {
-        printf("Score %d: %f\n", i+1, h_bc[i]);
+    /* Stampa dei risultati */
+    printf("\nBetweenness Centrality\n");
+    printf("time: %f ms\n\n", time);
+
+    if (nodes <= 10) {
+        for (int i = 0; i < nodes; i++) {
+            printf("Score %d: %f\n", i+1, h_bc[i]);
+        }
     }
 
+    /* free della memoria */
     free(h_bc);
     free(h_matrix);
     cudaFree(d_bc);

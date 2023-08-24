@@ -1,14 +1,18 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 #include"../../include/utils.h"
 
 void count_shortest_paths(int src, int dst, int v, int node, int *visited, int *matrix, int shortest_path, int path_lenght, int *num_shortest_path_st, int *num_shortest_path_svt);
 
 int main(int argc, char const *argv[]) {
 
-    int node, rows, cols, num_shortest_path_svt, num_shortest_path_st;
+    int node, rows, cols, num_shortest_path_svt, num_shortest_path_st, max = 0;
     int *matrix, *distance_matrix, *visited;
     double *betweenness_centrality;
+    double time;
+
+    clock_t begin, end;
 
     /* Input: numero di nodi del grafo */
     printf("Inserire numero di nodi: ");
@@ -22,18 +26,12 @@ int main(int argc, char const *argv[]) {
     visited = (int*)malloc(node * sizeof(int));
 
     /* Leggiamo la matrice di esempio da un file */
-    readIMatrix(rows, cols, matrix, "data/demo/matrix.dat");
+    readIMatrix(rows, cols, matrix, "data/random_matrix.dat");
 
-    /* Stampiamo la matrice di esempio */
-    printf("Matrice di Adiacenza:\n");
-    printIMatrix(rows, cols, matrix);
+    begin = clock();
 
     /* Calcoliamo la distance matrix */
     distanceMatrix(rows, cols, matrix, distance_matrix);
-
-    /* Stampiamo la distance matrix */
-    printf("\nDistance Matrix\n");
-    printIMatrix(rows, cols, distance_matrix);
 
     /* Calcoliamo la Betweenness Centrality per ogni nodo */
     for (int v = 0; v < node; v++) {
@@ -42,6 +40,7 @@ int main(int argc, char const *argv[]) {
         for (int s = 0; s < node; s++) {
             for (int t = s+1; t < node; t++) {
                 if (s != v && v != t) {
+                    printf("%d - %d\n", s+1, t+1);
                     num_shortest_path_st = 0;
                     num_shortest_path_svt = 0;
 
@@ -54,7 +53,26 @@ int main(int argc, char const *argv[]) {
                 }
             }
         }
-        printf("Node: %d\tScore: %f\n", v+1, betweenness_centrality[v]);
+        if (betweenness_centrality[v] > betweenness_centrality[max]) {
+            max = v;
+        }
+        break;
+    }
+
+    end = clock();
+
+    /* Calcolo tempo di esecuzione */
+    time = (double) (end - begin) / CLOCKS_PER_SEC;
+
+    /* Stampa dei risultati */
+    printf("\nBetweenness Centrality\n");
+    printf("\nmax: %d - score: %f\n", max+1, betweenness_centrality[max]);
+    printf("\ntime: %f ms\n\n", time * 1000);
+
+    if (node <= 10) {
+        for (int i  = 0; i < node; i++) {
+            printf("Score %d: %f\n", i+1, betweenness_centrality[i]);
+        }
     }
 
     /* free della memoria */
