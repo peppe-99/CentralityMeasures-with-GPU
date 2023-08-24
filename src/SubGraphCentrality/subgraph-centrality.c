@@ -1,14 +1,18 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<time.h>
 #include"../../include/utils.h"
 
 int main(int argc, char const *argv[]) {
     
-    int nodes, rows, cols, accuracy = 10;
+    int nodes, rows, cols, accuracy = 5, max = 0;
+    double time;
 
     double factorial = 1, org_inv_temp = 1.0, inv_temp = 1.0, beta, sum = 0.0;
     double *matrix, *tmp_matrix, *pwd_matrix, *exp_matrix, *subgraph_centrality, *total_communicability;
+
+    clock_t begin, end;
 
     /* Input: nodi del grafo */
     printf("Number of nodes: ");
@@ -26,7 +30,7 @@ int main(int argc, char const *argv[]) {
 
 
     /* Leggiamo la matrice da un file */
-    readDMatrix(rows, cols, matrix, "data/demo/matrix.dat");
+    readDMatrix(rows, cols, matrix, "data/dense/4000/random_matrix.dat");
 
     /* Inizializziamo tmp_matrix = matrix*/
     memcpy(tmp_matrix, matrix, rows * cols * sizeof(double));
@@ -35,6 +39,8 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < (rows * cols); i += (nodes + 1)) {
         exp_matrix[i] = 1.0;
     }
+
+    begin = clock();
 
     /* Calcoliamo e^A = I + A */
     for (int i = 0; i < rows; i++) {
@@ -77,21 +83,32 @@ int main(int argc, char const *argv[]) {
 
     }
 
-    printDMatrix(rows, cols, exp_matrix);
+    end = clock();
+
+    /* Calcolo tempo di esecuzione */
+    time = (double) (end - begin) / CLOCKS_PER_SEC;
 
     /* SC(i) = [e^A]_ii */
-    printf("\nSubgraph Centrality:\n");
     for (int i = 0; i < nodes; i++) {
         sum += exp_matrix[i * cols + i];
         subgraph_centrality[i] = exp_matrix[i * cols + i];
+        if (subgraph_centrality[i] > subgraph_centrality[max]) {
+            max = i;
+        }
     }
+
+    printf("\nSubgraph Centrality:\n");
+    printf("\nmax: %d - score: %f\n", max+1, subgraph_centrality[max]/sum);
+    printf("\ntime: %f ms\n\n", time * 1000);
 
     for (int i = 0; i < nodes; i++) {
         subgraph_centrality[i] /= sum;
-        printf("Score %d: %f\n", (i+1), subgraph_centrality[i]);
+        if (nodes <= 10) {
+            printf("Score %d: %f\n", (i+1), subgraph_centrality[i]);
+        }
     }
-
-    /* TC(i) = sum_{j=1}^n [e^A]_ij */
+/*
+    /* TC(i) = sum_{j=1}^n [e^A]_ij
     printf("\nTotal Node Communicability:\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -99,6 +116,6 @@ int main(int argc, char const *argv[]) {
         }
         printf("Score %d: %f\n", (i+1), total_communicability[i]);
     }
-
+*/
     return 0;
 }

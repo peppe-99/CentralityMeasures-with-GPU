@@ -11,8 +11,11 @@ int main(int argc, char const *argv[]) {
     int n, r_size, c_size;
     int *h_r, *h_c;
     int *dev_r, *dev_c, *dev_sigma, *dev_distance;
+    float time;
 
     double *h_bc, *dev_bc, *dev_dependecy;
+
+    cudaEvent_t start, stop;
     
     /* Input: numero di nodi e archi del grafo */
     printf("Number of nodes: ");
@@ -35,23 +38,40 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &dev_bc, n * sizeof(double));
     cudaMalloc((void **) &dev_dependecy, n * sizeof(double));
 
-    readRCEgraph(h_r, h_c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
+    readRCEgraph(h_r, h_c, r_size, c_size, "data/sparse/1000/random_r.dat", "data/sparse/1000/random_c.dat");
+    //readRCEgraph(h_r, h_c, r_size, c_size, "data/demo/row_offsets.dat", "data/demo/column_indices.dat");
 
     /* copio gli array row_offests e column_indices sul device */
     cudaMemcpy(dev_r, h_r, r_size * sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(dev_c, h_c, c_size * sizeof(int), cudaMemcpyHostToDevice);
 
     /* configurazione del Kernel */
-    dim3 blockDim(64);
+    dim3 blockDim(n);
     dim3 gridDim((n + blockDim.x - 1) / blockDim.x);
+
+    /* Creiamo gli eventi per il tempo */
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start); // tempo di inizio
 
     bc_kernel<<<gridDim, blockDim>>>(n, dev_r, dev_c, dev_bc, dev_sigma, dev_distance, dev_dependecy);
     cudaDeviceSynchronize();
 
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time, start, stop);
+
     cudaMemcpy(h_bc, dev_bc, n * sizeof(double), cudaMemcpyDeviceToHost);
 
-    for (int i = 0; i < n; i++) {
-        printf("Score %d: %f\n", i+1, h_bc[i]);
+    /* Stampa dei risultati */
+    printf("\nBetweenness Centrality\n");
+    printf("time: %f ms\n\n", time);
+    if (n <= 10) {
+        for (int i = 0; i < n; i++) {
+            printf("Score %d: %f\n", i+1, h_bc[i]);
+        }
     }
 
     /* free della memoria */
@@ -89,6 +109,7 @@ __global__ void bc_kernel(int n, int *R, int *C, double *bc, int *sigma, int *di
             s++;
             done = false;
             current_depth = - 1;
+            printf("%d\n", s);
         }
         __syncthreads();
 

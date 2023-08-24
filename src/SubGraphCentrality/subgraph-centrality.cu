@@ -6,13 +6,15 @@
 
 int main(int argc, char const *argv[]) {
     
-    int rows, cols, nodes, accuracy = 10;
+    int rows, cols, nodes, accuracy = 5; // provare con 10, 15 e 20
     double alpha = 1.0, beta = 1.0, factorial = 1, sum = 0.0, org_inv_temp = 1.0, inv_temp = 1.0;
+    float time;
 
     double *h_matrix, *h_exp_matrix, *h_sgc, *h_tc;
     double *d_matrix, *d_pwd_matrix, *d_exp_matrix, *d_sgc;
 
     cublasHandle_t handle;
+    cudaEvent_t start, stop;
     size_t byte_matrix, byte_vector;
 
     /* Input: nodi del grafo */
@@ -38,7 +40,7 @@ int main(int argc, char const *argv[]) {
     cudaMalloc((void **) &d_sgc, byte_vector);
 
     /* Leggiamo la matrice di esempio da un file */
-    readDMatrix(rows, cols, h_matrix, "data/demo/matrix.dat");
+    readDMatrix(rows, cols, h_matrix, "data/dense/16000/random_matrix.dat");
 
     /* Inizializzo h_exp_matrix */
     for (int i = 0; i < (rows * cols); i += (nodes+1)) {
@@ -52,6 +54,12 @@ int main(int argc, char const *argv[]) {
     cublasSetMatrix(rows, cols, sizeof(double), h_matrix, rows, d_matrix, rows);
     cublasSetMatrix(rows, cols, sizeof(double), h_matrix, rows, d_pwd_matrix, rows);
     cublasSetMatrix(rows, cols, sizeof(double), h_exp_matrix, rows, d_exp_matrix, rows);
+
+    /* Creiamo gli eventi per il tempo */
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    cudaEventRecord(start); // tempo di inizio
 
     /* Inizialmente e^A = I + A */
     cublasDgeam(
@@ -89,10 +97,16 @@ int main(int argc, char const *argv[]) {
         );
     }
 
+    /* Calcolo tempo di esecuzione */
+    cudaEventRecord(stop); // tempo di fine
+    cudaEventSynchronize(stop);
+    cudaEventElapsedTime(&time, start, stop);
+
     cublasGetMatrix(rows, cols, sizeof(double), d_exp_matrix, rows, h_exp_matrix, rows);
 
     /* SC(i) = [e^A]_ii */
-    printf("\nSubgraph Centrality:\n");
+    printf("\nNormalized Subgraph Centrality\n");
+    printf("\ntime: %f ms\n\n", time);
     for (int i = 0; i < nodes; i++) {
         sum += h_exp_matrix[i * cols + i];
         h_sgc[i] = h_exp_matrix[i * cols + i];
@@ -100,10 +114,13 @@ int main(int argc, char const *argv[]) {
 
     for (int i = 0; i < nodes; i++) {
         h_sgc[i] /= sum;
-        printf("Score %d: %f\n", (i+1), h_sgc[i]);
+        if (nodes <= 10) {
+            printf("Score %d: %f\n", (i+1), h_sgc[i]);
+        }
     }
 
-    /* NC(i,j) = [e^A]_ij */
+/*
+    NC(i,j) = [e^A]_ij
     printf("\nCommunicability between nodes:\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -111,7 +128,7 @@ int main(int argc, char const *argv[]) {
         }
     }
 
-    /* TC(i) = sum_{j=1}^n [e^A]_ij */
+    TC(i) = sum_{j=1}^n [e^A]_ij
     printf("\nTotal Node Communicability:\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -119,6 +136,7 @@ int main(int argc, char const *argv[]) {
         }
         printf("Score %d: %f\n", (i+1), h_tc[i]);
     }
+*/
 
     /* Distruggo l'handle */
     cublasDestroy(handle);
