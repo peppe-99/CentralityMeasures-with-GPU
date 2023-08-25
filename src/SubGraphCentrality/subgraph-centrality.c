@@ -107,8 +107,8 @@ int main(int argc, char const *argv[]) {
             printf("Score %d: %f\n", (i+1), subgraph_centrality[i]);
         }
     }
-/*
-    /* TC(i) = sum_{j=1}^n [e^A]_ij
+
+    /* TC(i) = sum_{j=1}^n [e^A]_ij */
     printf("\nTotal Node Communicability:\n");
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -116,6 +116,6 @@ int main(int argc, char const *argv[]) {
         }
         printf("Score %d: %f\n", (i+1), total_communicability[i]);
     }
-*/
+    
     return 0;
 }
